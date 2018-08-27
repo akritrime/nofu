@@ -34,12 +34,17 @@ export class Lexer {
         // this.readChar()
     }
 
+    // checks if a character is alphanumeric
+    private isAlphanumeric(ch: string) {
+        return /^[A-Za-z0-9_.]$/.test(ch)
+    }
+
     // main method, advances the lexer to produce the next avaialable token till EOF, tokens are separated by space,
     // a string of character is read as a token if it contains any alphanumerics or '_' or '.'
     next(): Token {
         this.eatSpace()
         let literal = this.ch
-        while(/^[A-Za-z0-9_.]$/.test(this.peekChar())){
+        while(this.isAlphanumeric(this.ch) && this.isAlphanumeric(this.peekChar())){
             this.readChar()
             literal += this.ch
         }

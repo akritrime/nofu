@@ -94,3 +94,31 @@ test("tests that `let a = 5\\n` gets tokenized properly", () => {
     }
 })
 
+test("tests that `fn(a, b) { a + b }\\n` gets tokenized properly", () => {
+    const input = "fn(a, b) { a + b }\n"
+    const expectedOutput = [
+        new Token("fn", TokenType.FUNCTION),
+        new Token("(", TokenType.LPAREN),
+        new Token("a", TokenType.IDENTIFIER),
+        new Token(",", TokenType.COMMA),
+        new Token("b", TokenType.IDENTIFIER),
+        new Token(")", TokenType.RPAREN),
+        new Token("{", TokenType.LBRACE),
+        new Token("a", TokenType.IDENTIFIER),
+        new Token("+", TokenType.ADD),
+        new Token("b", TokenType.IDENTIFIER),
+        new Token("}", TokenType.RBRACE),
+        new Token("\n", TokenType.NEWLINE),
+        new Token("EOF", TokenType.EOF)
+    ]
+
+    const output = new Lexer(input)
+    for(let expTk of expectedOutput) {
+        let tk = output.next()
+        // console.log(tk)
+        expect(tk.literal).toBe(expTk.literal)
+        expect(tk.type).toBe(expTk.type)
+
+    }
+})
+

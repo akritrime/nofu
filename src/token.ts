@@ -1,3 +1,33 @@
+export enum TokenType {
+    ILLEGAL = "ILLEGAL",
+    EOF = "EOF",
+    INT = "INT",
+    FLOAT = "FLOAT",
+    STRING = "STRING",
+    IDENTIFIER = "IDENTIFIER",
+    ADD = "ADD",
+    SUB = "SUB",
+    MUL = "MUL",
+    DIV = "DIV",
+    MOD = "MOD",
+    ASSIGN = "ASSIGN",
+    COMMA = "COMMA",
+    NEWLINE = "NEWLINE",
+    LPAREN = "LPAREN",
+    RPAREN = "RPAREN",
+    LBRACE = "LBRACE",
+    RBRACE = "RBRACE",
+    FUNCTION = "FUNCTION",
+    LET = "LET",
+    CONST = "CONST",
+}
+
+export const KEYWORDS: { [index: string] : TokenType} = {
+    "fn": TokenType.FUNCTION,
+    "let": TokenType.LET,
+    "const": TokenType.CONST
+}
+
 export class Token {
     type: TokenType
     literal: string
@@ -37,8 +67,9 @@ export class Token {
             case '':
                 return new Token("EOF", TokenType.EOF)
             default:
-                if(literal === 'let') {
-                    return new Token(literal, TokenType.LET)
+                const kw = KEYWORDS[literal]
+                if (kw) {
+                    return new Token(literal, kw)
                 }
                 
                 if(/^\d*[.]\d+$/.test(literal)) {
@@ -55,28 +86,4 @@ export class Token {
                 return new Token(literal, TokenType.ILLEGAL)
         }
     }
-}
-
-export enum TokenType {
-    ILLEGAL = "ILLEGAL",
-    EOF = "EOF",
-    INT = "INT",
-    FLOAT = "FLOAT",
-    STRING = "STRING",
-    IDENTIFIER = "IDENTIFIER",
-    ADD = "ADD",
-    SUB = "SUB",
-    MUL = "MUL",
-    DIV = "DIV",
-    MOD = "MOD",
-    ASSIGN = "ASSIGN",
-    COMMA = "COMMA",
-    NEWLINE = "NEWLINE",
-    LPAREN = "LPAREN",
-    RPAREN = "RPAREN",
-    LBRACE = "LBRACE",
-    RBRACE = "RBRACE",
-    FUNCTION = "FUNCTION",
-    LET = "LET",
-    CONST = "CONST",
 }
