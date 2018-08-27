@@ -1,28 +1,59 @@
 export enum TokenType {
     ILLEGAL = "ILLEGAL",
     EOF = "EOF",
+
+    // types
     INT = "INT",
     FLOAT = "FLOAT",
     STRING = "STRING",
+
+    // vars
     IDENTIFIER = "IDENTIFIER",
+
+    // operators
     ADD = "ADD",
     SUB = "SUB",
     MUL = "MUL",
     DIV = "DIV",
     MOD = "MOD",
     ASSIGN = "ASSIGN",
+
+    // punctuations
     COMMA = "COMMA",
     NEWLINE = "NEWLINE",
     LPAREN = "LPAREN",
     RPAREN = "RPAREN",
     LBRACE = "LBRACE",
     RBRACE = "RBRACE",
+
+    // keywords
     FUNCTION = "FUNCTION",
     LET = "LET",
     CONST = "CONST",
 }
 
-export const KEYWORDS: { [index: string] : TokenType} = {
+type TokenTable = { [index: string] : TokenType }
+
+export const OPERATORS: TokenTable = {
+    "+": TokenType.ADD,
+    "-": TokenType.SUB,
+    "*": TokenType.MUL,
+    "/": TokenType.DIV,
+    "%": TokenType.MOD,
+    "=": TokenType.ASSIGN,
+}
+
+export const PUNCTUATIONS: TokenTable = {
+    ",": TokenType.COMMA,
+    "\n": TokenType.NEWLINE,
+    "(": TokenType.LPAREN,
+    ")": TokenType.RPAREN,
+    "{": TokenType.LBRACE,
+    "}": TokenType.RBRACE
+
+}
+
+export const KEYWORDS: TokenTable = {
     "fn": TokenType.FUNCTION,
     "let": TokenType.LET,
     "const": TokenType.CONST
@@ -39,51 +70,37 @@ export class Token {
 
     // detects and constructs a token based on the literal being passed.
     static fromLiteral(literal: string) {
-        switch (literal) {
-            case '=':
-                return new Token(literal, TokenType.ASSIGN)
-            case '\n':
-                return new Token(literal, TokenType.NEWLINE)
-            case '(':
-                return new Token(literal, TokenType.LPAREN)
-            case ')':
-                return new Token(literal, TokenType.RPAREN)
-            case ',':
-                return new Token(literal, TokenType.COMMA)
-            case '+':
-                return new Token(literal, TokenType.ADD)
-            case '-':
-                return new Token(literal, TokenType.SUB)
-            case '*':
-                return new Token(literal, TokenType.MUL)
-             case '/':
-                return new Token(literal, TokenType.DIV)
-            case '%':
-                return new Token(literal, TokenType.MOD)
-            case '{':
-                return new Token(literal, TokenType.LBRACE)
-            case '}':
-                return new Token(literal, TokenType.RBRACE)
-            case '':
+
+            if(literal === "") {
                 return new Token("EOF", TokenType.EOF)
-            default:
-                const kw = KEYWORDS[literal]
-                if (kw) {
-                    return new Token(literal, kw)
-                }
-                
-                if(/^\d*[.]\d+$/.test(literal)) {
-                    return new Token(literal, TokenType.FLOAT)
-                }
+            }
 
-                if(/^\d+$/.test(literal)) {
-                    return new Token(literal, TokenType.INT)
-                }
+            const ops = OPERATORS[literal]
+            if(ops) {
+                return new Token(literal, ops)
+            }
 
-                if(/^[a-z][a-zA-Z0-9_]*$/.test(literal)) {
-                    return new Token(literal, TokenType.IDENTIFIER)
-                }
-                return new Token(literal, TokenType.ILLEGAL)
-        }
+            const p = PUNCTUATIONS[literal]
+            if(p) {
+                return new Token(literal, p)
+            }
+            const kw = KEYWORDS[literal]
+            if (kw) {
+                return new Token(literal, kw)
+            }
+            
+            if(/^\d*[.]\d+$/.test(literal)) {
+                return new Token(literal, TokenType.FLOAT)
+            }
+
+            if(/^\d+$/.test(literal)) {
+                return new Token(literal, TokenType.INT)
+            }
+
+            if(/^[a-z][a-zA-Z0-9_]*$/.test(literal)) {
+                return new Token(literal, TokenType.IDENTIFIER)
+            }
+            return new Token(literal, TokenType.ILLEGAL)
+        // }
     }
 }

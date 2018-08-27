@@ -1,11 +1,15 @@
 import { Token, TokenType} from "../src/token"
 import { Lexer } from "../src/lexer"
 
-test("tests that `=+(){},\\n` gets tokenized properly", () => {
-    const input = "=+(){},\n"
+test("tests that `=+-*/%(){},\\n` gets tokenized properly", () => {
+    const input = "=+-*/%(){},\n"
     const expectedOutput = [
         new Token("=", TokenType.ASSIGN),
         new Token("+", TokenType.ADD),
+        new Token("-", TokenType.SUB),
+        new Token("*", TokenType.MUL),
+        new Token("/", TokenType.DIV),
+        new Token("%", TokenType.MOD),
         new Token("(", TokenType.LPAREN),
         new Token(")", TokenType.RPAREN),
         new Token("{", TokenType.LBRACE),
@@ -65,7 +69,7 @@ test("tests that `5` gets identified as int", () => {
     expect(tk.type).toBe(expectedTk.type)
 })
 
-test("tests that `5.25` gets identified as int", () => {
+test("tests that `5.25` gets identified as float", () => {
     const input = `   5.25    `
     const expectedTk = new Token("5.25", TokenType.FLOAT)
     const tk = (new Lexer(input)).next()
